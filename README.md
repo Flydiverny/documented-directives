@@ -42,8 +42,11 @@ let schema = makeExecutableSchema({
 
 schema = descriptionTransformer(schema)
 
-// Alternatively specify which directives should be exposed in the description
-schema = descriptionTransformer(schema, ['deprecated'])
+// Alternatively supply a filter for which directives should be exposed in the
+// description. Defaults to exposing all fields.
+schema = descriptionTransformer(schema, {
+  exposedFilter: (directive) => directive.name === 'deprecated',
+})
 
 printSchema(schema)
 ```
