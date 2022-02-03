@@ -3,15 +3,18 @@ import {
   MapperKind,
   getDirectives,
   Maybe,
+  DirectiveAnnotation,
 } from "@graphql-tools/utils";
 import { GraphQLSchema } from "graphql";
 
+export type DirectiveOptions = {
+  exposedFilter: (directive: DirectiveAnnotation) => boolean;
+};
+
 const updateDescription =
-  (schema: GraphQLSchema, exposedDirectives: string[]) =>
+  (schema: GraphQLSchema, { exposedFilter }: DirectiveOptions) =>
   <T extends { description?: Maybe<string> }>(field: T) => {
-    const directives = getDirectives(schema, field).filter((directive) =>
-      exposedDirectives.includes(directive.name)
-    );
+    const directives = getDirectives(schema, field).filter(exposedFilter);
 
     if (!directives.length) return field;
 
@@ -36,17 +39,9 @@ const updateDescription =
 
 export const descriptionTransformer = (
   schema: GraphQLSchema,
-  exposedDirectives?: string[]
+  { exposedFilter = () => true }: Partial<DirectiveOptions> = {}
 ) => {
-  exposedDirectives ??= schema
-    .getDirectives()
-    .map((directive) => directive.name);
-
-  if (!exposedDirectives.length) {
-    return schema;
-  }
-
-  const descriptionUpdater = updateDescription(schema, exposedDirectives);
+  const descriptionUpdater = updateDescription(schema, { exposedFilter });
 
   schema = descriptionUpdater(schema);
 
