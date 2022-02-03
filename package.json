@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "check-types": "tsc --noEmit",
     "prepublish": "npm run build",
     "build": "tsc"
   },
@@ -19,7 +20,13 @@
     "@graphql-tools/utils": "^8.6.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/jest": "^27.4.0",
+    "babel-jest": "^27.4.6",
     "graphql": "^16.3.0",
+    "jest": "^27.4.7",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.5"
   },
