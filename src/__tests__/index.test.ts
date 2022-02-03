@@ -8,23 +8,6 @@ import {
 } from "graphql";
 import { descriptionTransformer } from "..";
 
-function getFieldValuePairs(
-  schema: GraphQLSchema,
-  type: string
-): [string, string][] {
-  const parsedSchema = parse(printSchema(schema));
-
-  const typeNode = parsedSchema.definitions.find(
-    (definition): definition is ObjectTypeDefinitionNode =>
-      definition.kind === Kind.OBJECT_TYPE_DEFINITION &&
-      definition.name.value === type
-  );
-
-  return typeNode.fields.map((field) => {
-    return [field.name.value, field.description.value];
-  });
-}
-
 describe("descriptionTransformer", () => {
   it("Adds directives as comments", async (): Promise<void> => {
     let schema = makeExecutableSchema({
@@ -44,16 +27,26 @@ describe("descriptionTransformer", () => {
     });
 
     schema = descriptionTransformer(schema);
-    expect(getFieldValuePairs(schema, "Query")).toEqual([
-      [
-        "helloWorld",
-        "Run Hello World\n\n@deprecated(reason: No longer supported)",
-      ],
-      ["cowSay", "Cow say MOOO"],
-      [
-        "fooBar",
-        "foo bar is cool\n\n@deprecated(reason: no more foos to give)",
-      ],
-    ]);
+
+    expect(printSchema(schema)).toEqual(`
+type Query {
+  """
+  Run Hello World
+  
+  @deprecated(reason: No longer supported)
+  """
+  helloWorld: String @deprecated
+
+  """Cow say MOOO"""
+  cowSay: String
+
+  """
+  foo bar is cool
+  
+  @deprecated(reason: no more foos to give)
+  """
+  fooBar: String @deprecated(reason: "no more foos to give")
+}
+    `.trim());
   });
 });
