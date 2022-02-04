@@ -1,8 +1,7 @@
 {
+	"extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "Node",
     "outDir": "build",
-    "esModuleInterop": true
+    "rootDir": "src"
   }
 }
