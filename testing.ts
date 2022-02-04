@@ -1,6 +1,6 @@
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { printSchema } from "graphql";
-import { descriptionTransformer } from "./src";
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { printSchema } from 'graphql'
+import { descriptionTransformer } from './src'
 
 // test("can document schema", () => {
 let schema = makeExecutableSchema({
@@ -17,12 +17,12 @@ let schema = makeExecutableSchema({
     `,
   ],
   resolvers: {},
-});
+})
 
-console.log("Before", printSchema(schema));
+console.log('Before', printSchema(schema))
 
-schema = descriptionTransformer(schema);
+schema = descriptionTransformer(schema)
 // console.log(schema);
-console.log("\n\nSepaaaaaaaaaaaaaaaaaaaaaraaaaaaated\n\n");
-console.log("After", printSchema(schema));
+console.log('\n\nSepaaaaaaaaaaaaaaaaaaaaaraaaaaaated\n\n')
+console.log('After', printSchema(schema))
 // });

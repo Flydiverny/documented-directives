@@ -3,39 +3,39 @@
 When using schema introspection sadly directives that are applied in the schema is not exposed.
 As an API consumer this can be very useful information if for example you have a directive for @auth(role: "Admin")
 
-
 ## Example
+
 ```ts
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { printSchema } from "graphql";
-import { descriptionTransformer } from "./src";
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { printSchema } from 'graphql'
+import { descriptionTransformer } from './src'
 
 let schema = makeExecutableSchema({
   typeDefs: [
     /* GraphQL */ `
       type Query {
         "Run Hello World"
-		helloWorld: String @deprecated
-		"Cow say MOOO"
+        helloWorld: String @deprecated
+        "Cow say MOOO"
         cowSay: String
-		"foo bar is cool"
+        "foo bar is cool"
         fooBar: String @deprecated(reason: "no more foos to give")
       }
     `,
   ],
-  resolvers: {
-  },
-});
+  resolvers: {},
+})
 
-schema = descriptionTransformer(schema);
+schema = descriptionTransformer(schema)
 
 // Alternatively specify which directives should be exposed in the description
-schema = descriptionTransformer(schema, ["deprecated"]);
+schema = descriptionTransformer(schema, ['deprecated'])
 
 printSchema(schema)
 ```
 
 Expected schema output
+
 ```graphql
 type Query {
   """
@@ -45,7 +45,9 @@ type Query {
   """
   helloWorld: String @deprecated
 
-  """Cow say MOOO"""
+  """
+  Cow say MOOO
+  """
   cowSay: String
 
   """

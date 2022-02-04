@@ -8,7 +8,8 @@
     "test": "jest",
     "check-types": "tsc --noEmit",
     "prepublish": "npm run build",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "husky install"
   },
   "files": [
     "build"
@@ -26,11 +27,21 @@
     "@types/jest": "^27.4.0",
     "babel-jest": "^27.4.6",
     "graphql": "^16.3.0",
+    "husky": "^7.0.4",
     "jest": "^27.4.7",
+    "lint-staged": "^12.3.3",
+    "prettier": "^2.5.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
     "graphql": "^16"
+  },
+  "engines": {
+    "node": "^16",
+    "npm": "^8"
+  },
+  "lint-staged": {
+    "*.{js,ts,css,md,yaml}": "prettier --write"
   }
 }

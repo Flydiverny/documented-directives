@@ -1,8 +1,8 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"moduleResolution": "Node",
-		"outDir": "build",
-		"esModuleInterop": true,
-	}
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "outDir": "build",
+    "esModuleInterop": true
+  }
 }
