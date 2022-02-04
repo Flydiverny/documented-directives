@@ -1,54 +1,42 @@
-import {
-  mapSchema,
-  MapperKind,
-  getDirectives,
-  Maybe,
-} from "@graphql-tools/utils";
-import { GraphQLSchema } from "graphql";
+import { mapSchema, MapperKind, getDirectives, Maybe } from '@graphql-tools/utils'
+import { GraphQLSchema } from 'graphql'
 
 const updateDescription =
   (schema: GraphQLSchema, exposedDirectives: string[]) =>
   <T extends { description?: Maybe<string> }>(field: T) => {
     const directives = getDirectives(schema, field).filter((directive) =>
       exposedDirectives.includes(directive.name)
-    );
+    )
 
-    if (!directives.length) return field;
+    if (!directives.length) return field
 
     const directiveDoc = directives.map((directive) => {
-      const args = Object.entries(directive.args ?? {}) as [string, any];
+      const args = Object.entries(directive.args ?? {}) as [string, any]
 
       const argDoc = args.map(([name, value]) => {
-        return `${name}: ${value}`;
-      });
+        return `${name}: ${value}`
+      })
 
-      return `@${directive.name}(${argDoc.join(",")})`;
-    });
+      return `@${directive.name}(${argDoc.join(',')})`
+    })
 
-    const doc = directiveDoc.join("\n");
+    const doc = directiveDoc.join('\n')
 
-    field.description = field.description
-      ? `${field.description}\n\n${doc}`
-      : doc;
+    field.description = field.description ? `${field.description}\n\n${doc}` : doc
 
-    return field;
-  };
-
-export const descriptionTransformer = (
-  schema: GraphQLSchema,
-  exposedDirectives?: string[]
-) => {
-  exposedDirectives ??= schema
-    .getDirectives()
-    .map((directive) => directive.name);
-
-  if (!exposedDirectives.length) {
-    return schema;
+    return field
   }
 
-  const descriptionUpdater = updateDescription(schema, exposedDirectives);
+export const descriptionTransformer = (schema: GraphQLSchema, exposedDirectives?: string[]) => {
+  exposedDirectives ??= schema.getDirectives().map((directive) => directive.name)
 
-  schema = descriptionUpdater(schema);
+  if (!exposedDirectives.length) {
+    return schema
+  }
+
+  const descriptionUpdater = updateDescription(schema, exposedDirectives)
+
+  schema = descriptionUpdater(schema)
 
   return mapSchema(schema, {
     [MapperKind.TYPE]: descriptionUpdater,
@@ -76,5 +64,5 @@ export const descriptionTransformer = (
     [MapperKind.ARGUMENT]: descriptionUpdater,
     [MapperKind.INPUT_OBJECT_FIELD]: descriptionUpdater,
     [MapperKind.DIRECTIVE]: descriptionUpdater,
-  });
-};
+  })
+}
