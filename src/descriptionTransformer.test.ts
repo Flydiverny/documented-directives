@@ -1,9 +1,20 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { GraphQLSchema, Kind, ObjectTypeDefinitionNode, parse, printSchema } from 'graphql'
-import { descriptionTransformer } from '..'
+import { GraphQLSchema, printSchema } from 'graphql'
+import { descriptionTransformer } from './descriptionTransformer'
+import prettier from 'prettier'
+
+const format = (string: string) => prettier.format(string, { semi: false, parser: 'graphql' })
+
+const expectSchema = (schema: GraphQLSchema) => {
+  return {
+    toMatch(string: string) {
+      return expect(format(printSchema(schema))).toEqual(format(string))
+    },
+  }
+}
 
 describe('descriptionTransformer', () => {
-  it('Adds directives as comments', async (): Promise<void> => {
+  it('Adds directives to description', async (): Promise<void> => {
     let schema = makeExecutableSchema({
       typeDefs: [
         /* GraphQL */ `
@@ -22,27 +33,27 @@ describe('descriptionTransformer', () => {
 
     schema = descriptionTransformer(schema)
 
-    expect(printSchema(schema)).toEqual(
-      `
-type Query {
-  """
-  Run Hello World
-  
-  @deprecated(reason: No longer supported)
-  """
-  helloWorld: String @deprecated
+    expectSchema(schema).toMatch(/* GraphQL */ `
+      type Query {
+        """
+        Run Hello World
 
-  """Cow say MOOO"""
-  cowSay: String
+        @deprecated(reason: No longer supported)
+        """
+        helloWorld: String @deprecated
 
-  """
-  foo bar is cool
-  
-  @deprecated(reason: no more foos to give)
-  """
-  fooBar: String @deprecated(reason: "no more foos to give")
-}
-    `.trim()
-    )
+        """
+        Cow say MOOO
+        """
+        cowSay: String
+
+        """
+        foo bar is cool
+
+        @deprecated(reason: no more foos to give)
+        """
+        fooBar: String @deprecated(reason: "no more foos to give")
+      }
+    `)
   })
 })
