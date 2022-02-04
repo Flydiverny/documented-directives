@@ -1,15 +1,9 @@
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import {
-  GraphQLSchema,
-  Kind,
-  ObjectTypeDefinitionNode,
-  parse,
-  printSchema,
-} from "graphql";
-import { descriptionTransformer } from "..";
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { GraphQLSchema, Kind, ObjectTypeDefinitionNode, parse, printSchema } from 'graphql'
+import { descriptionTransformer } from '..'
 
-describe("descriptionTransformer", () => {
-  it("Adds directives as comments", async (): Promise<void> => {
+describe('descriptionTransformer', () => {
+  it('Adds directives as comments', async (): Promise<void> => {
     let schema = makeExecutableSchema({
       typeDefs: [
         /* GraphQL */ `
@@ -24,11 +18,12 @@ describe("descriptionTransformer", () => {
         `,
       ],
       resolvers: {},
-    });
+    })
 
-    schema = descriptionTransformer(schema);
+    schema = descriptionTransformer(schema)
 
-    expect(printSchema(schema)).toEqual(`
+    expect(printSchema(schema)).toEqual(
+      `
 type Query {
   """
   Run Hello World
@@ -47,6 +42,7 @@ type Query {
   """
   fooBar: String @deprecated(reason: "no more foos to give")
 }
-    `.trim());
-  });
-});
+    `.trim()
+    )
+  })
+})
