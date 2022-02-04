@@ -3,7 +3,9 @@
   "compilerOptions": {
     "outDir": "build",
     "rootDir": "src",
+    "baseUrl": ".",
     "declaration": true
   },
+  "include": ["src"],
   "exclude": ["**/*.test.ts"]
 }
