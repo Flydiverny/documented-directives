@@ -8,6 +8,7 @@
     "test": "jest",
     "check-types": "tsc --noEmit",
     "prepublish": "npm run build",
+    "prebuild": "rm -rf build",
     "build": "tsc",
     "prepare": "husky install"
   },
