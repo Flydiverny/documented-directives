@@ -1,7 +1,21 @@
+# graphql-document-directives
+
+## Installation
+
+```
+npm install graphql-document-directives
+```
+
+or
+
+```
+yarn add graphql-document-directives
+```
+
 ## Why?
 
-When using schema introspection sadly directives that are applied in the schema is not exposed.
-As an API consumer this can be very useful information if for example you have a directive for @auth(role: "Admin")
+When using schema introspection information about which directives are applied in the schema is not exposed.
+As an API consumer directives can provide useful information if for example you have a directive for @auth(role: "Admin")
 
 ## Example
 
@@ -58,3 +72,7 @@ type Query {
   fooBar: String @deprecated(reason: "no more foos to give")
 }
 ```
+
+### Related
+
+- https://github.com/graphql/graphql-spec/issues/300
